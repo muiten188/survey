@@ -1,0 +1,16 @@
+#answer_radio .row{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0;
+}
+#answer_radio .form-check{
+	float: left;
+}
+#add-answer{
+	margin-top: 10px;
+}
+.show{
+    display: block
+}
+.hide{
+    display: none
+}

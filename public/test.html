@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Survay Web</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <h4>Questions</h4>
+            <form method="POST" id="formQuestion">
+            </form>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            var url = new URL(document.URL);
+            var client = url.searchParams.get("clientMac");
+            var apMacAddress = url.searchParams.get("apMacAddress");
+            var agent = url.searchParams.get("User-Agent");
+             var domain = 'http://113.171.23.202:8001';
+//            var domain = 'http://survay.loc';
+            question();
+            function question() {
+                url = domain + "/api/?client="+client+'&ap_mac_address='+apMacAddress+'&agent='+agent;
+                $.get(url, function (data, status) {
+                    html(data);
+                });
+            }
+            function html(data) {
+                var html = '';
+                html += '<div class="row" style="margin-bottom: 20px; border-bottom: 1px solid #ccc;">';
+                html += '<div class="col-md-12">';
+                html += '<h6>' + data['success']['question']['title'] + '</h6>';
+                html += '<div class="float-left">';
+                html += '<input type="hidden" name="question" value="' + data['success']['question']['id'] + '">';
+                if (data['success']['question']['type'] == 1) {
+                    $.each(data['success']['question']['answers'], function (key, value) {
+                        html += '<div class="form-radio" style="margin-bottom: 10px">';
+                        if(key==0){
+                             html += '<input type="radio" name="answer" required class="form-radio-input" id="answer_' + value['id'] + '" value="' + value['id'] + '">';
+                        }else{
+                             html += '<input type="radio" name="answer" class="form-radio-input" id="answer_' + value['id'] + '" value="' + value['id'] + '">';
+                        }
+                       
+                        html += '<label class="form-radio-label" for="answer_' + value['id'] + '">' + value['title'] + '</label>';
+                        html += '</div>';
+                    });
+                } else {
+                    html += '<div class="form-group" style="margin-bottom: 10px">';
+                    html += '<textarea class="form-control" required style="width:400px" name="answer"></textarea>';
+                    html += '</div>';
+                }
+                html += '</div></div> </div>';
+                html += '<input type="submit" class="btn btn-primary">';
+                $('#formQuestion').html(html);
+            }
+            function openWifi(){
+
+            }
+            $("#formQuestion").submit(function (event) {
+                event.preventDefault(); //prevent default action 
+                var data = $(this).serialize();
+                $.ajax({
+                    url: domain + '/api/save?client='+client,
+                    type: 'POST',
+                    data: data
+                }).done(function (response) {
+                    if (response['success'] == 'end') {
+                        openWifi();
+                        $('#formQuestion').html('Connected Wifi');
+                    } else {
+                        html(response);
+                    }
+
+                    //
+                    // $("#server-results").html(response);
+                });
+            });
+        </script>
+    </body>
+</html>

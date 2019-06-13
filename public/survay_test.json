@@ -1,0 +1,45 @@
+{
+    "sequence": {
+        "1": {
+            "options": {
+                "a": {
+                    "sequence": {
+                        "2": {
+
+                        }
+                    }
+                },
+                "b": {
+                    "random": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                }
+            }
+        },
+        "random": [
+            "1",
+            "2",
+            "3"
+        ],
+        "time_condition": [
+            {
+                "before": 12,
+                "sequence": [
+                    "7",
+                    "8",
+                    "end"
+                ]
+            },
+            {
+                "after": 12,
+                "sequence": [
+                    "10",
+                    "11",
+                    "end"
+                ]
+            }
+        ]
+    }
+}
